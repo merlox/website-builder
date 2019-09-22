@@ -1,90 +1,168 @@
 mainColor = rgb(68, 129, 116)
-secondaryColor = rgb(141, 194, 183)
+darkMainColor = rgb(42, 88, 78)
+halfDarkMainColor = rgb(56, 113, 101)
+lightMainColor = rgb(141, 194, 183)
 
 body
   margin: 0
   font-family: sans-serif
 
+h3
+  font-weight: 300
+
 .main-container
   display: grid
-  width: 100vw
 
-.navigation
-  background-color: mainColor
-  color: white
+  .navigation
+    background-color: mainColor
+    color: white
 
-  .logo
-    font-size: 20pt
-    padding-left: 10px
-    padding-top: 10px
+    .logo
+      font-size: 20pt
+      padding-left: 10px
+      padding-top: 10px
 
-  .links
-    width: 100%
-
-    ul
-      list-style-type: none
-      padding-left: 0
-      display: grid
-      grid-auto-flow: column
+    .links
       width: 100%
 
-    li
-      justify-self: center
+      ul
+        list-style-type: none
+        padding-left: 0
+        display: grid
+        grid-auto-flow: column
+        width: 100%
+        margin: 0
+        cursor: pointer
+        margin-top: 10px
 
-.settings-box
-  width: 300px
-  background-color: secondaryColor
-  padding: 20px
-  justify-self: right
+      li
+        justify-self: center
+        padding: 10px
+        width: 100%
+        box-sizing: border-box
+        text-align: center
 
-  .settings-select
-    border: 0
-    background-color: white
-    width: 50%
-    border-radius: 0
-    -webkit-appearance: none
-    -moz-appearance: none
-    padding: 10px
-    position: relative
-    cursor: pointer
-    font-size: 12px !important
+        &:hover
+          background-color: darkMainColor
 
-    &:hover
-      background-color: mainColor
-      color: white
+        &:active
+          background-color: halfDarkMainColor
 
-.settings-header
-  background-color: white
-  padding: 20px
-  margin-top: 20px
-  border: 0
+  .settings-box
+    width: 300px
+    background-color: lightMainColor
+    padding: 20px
+    justify-self: right
+    position: absolute
+    right: 20px
+    bottom: 20px
 
-  .settings-header-logo
-    border: 1px solid grey
-    background-color: white
-    padding: 10px
-    cursor: pointer
-    font-size: 12px
-
-  .settings-header-links ul
-    list-style-type: none
-    padding-left: 0
-    border: 1px solid grey
-
-    li
-      font-size: 12px
+    .settings-select
+      border: 0
+      background-color: white
+      width: 50%
+      border-radius: 0
+      -webkit-appearance: none
+      -moz-appearance: none
       padding: 10px
       position: relative
       cursor: pointer
+      font-size: 12px !important
 
       &:hover
         background-color: mainColor
         color: white
 
-      &:after
-        content: 'x'
-        position: absolute
-        right: 10px
-        width: 20px
-        height: 20px
-        text-align: center
+    .settings-header
+      background-color: white
+      padding: 20px
+      margin-top: 20px
+      border: 0
+
+      .settings-header-logo
+        h3
+          margin-top: 0
+          margin-bottom: 5px
+
+        .settings-header-logo-actions
+          font-size: 12px
+          display: flex
+          flex-direction: row
+          justify-content: space-around
+          border: 1px solid grey
+          padding: 10px
+
+      .settings-header-links
+        h3
+          margin-bottom: 5px
+
+        .settings-header-links-actions
+          border: 1px solid grey
+
+          ul
+            list-style-type: none
+            padding-left: 0
+            margin: 0
+
+            li
+              font-size: 12px
+              padding: 10px
+              position: relative
+              cursor: pointer
+
+              &:hover
+                background-color: mainColor
+                color: white
+
+              &:after
+                content: 'x'
+                position: absolute
+                right: 10px
+                width: 20px
+                height: 20px
+                text-align: center
+
+          form
+            margin: 10px auto
+            display: flex
+            flex-direction: row
+            justify-content: space-around
+
+    .settings-layout
+      background-color: white
+      padding: 20px
+      margin-top: 20px
+      border: 0
+
+      h3
+        margin-top: 0
+        margin-bottom: 5px
+
+      .settings-layout-actions
+          font-size: 12px
+          display: flex
+          flex-direction: row
+          justify-content: space-around
+          padding: 10px
+
+          .left-block
+          .right-block
+            display: flex
+            justify-content: space-between
+            height: 110px
+            background-color: lightgrey
+            box-sizing: border-box
+            width: 45%
+
+          .left-block
+            border: 3px solid grey
+
+          .right-block
+            display: flex
+            justify-content: space-between
+
+            div
+              width: 49%
+              border: 3px solid grey
+              box-sizing: border-box
+              display: inline-block

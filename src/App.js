@@ -7,6 +7,7 @@ class App extends Component {
     super(props)
     this.state = {
       headerLinks: localStorage.headerLinks ? JSON.parse(localStorage.headerLinks) : [],
+      logo: localStorage.logo ? localStorage.logo : 'Logo',
     }
   }
 
@@ -14,7 +15,7 @@ class App extends Component {
     return (
       <div className="main-container">
         <div className="navigation">
-          <div className="logo">Logo</div>
+          <div className="logo">{this.state.logo}</div>
           <div className="links">
             <ul>
               {this.state.headerLinks.map((item, i) => {
@@ -26,10 +27,15 @@ class App extends Component {
           </div>
         </div>
 
+        <div className="content-container">Hi this is the main content :)</div>
+
         <SettingsBox
           headerLinks={this.state.headerLinks}
           setHeaderLinks={headerLinks => {
             this.setState({headerLinks})
+          }}
+          setLogo={logo => {
+            this.setState({logo})
           }}
         />
       </div>
@@ -49,9 +55,35 @@ function SettingsBox (props) {
         <option value="content" name="admin-panel">Content</option>
       </select>
 
-      <div className="settings-header">
-        <button className="settings-header-logo" type="button">Update Logo</button>
-        <div className="settings-header-links">
+      <HeaderSettings
+        headerLinks={props.headerLinks}
+        setHeaderLinks={props.setHeaderLinks}
+        setLogo={props.setLogo}
+      />
+
+      <LayoutSettings
+      />
+    </div>
+  )
+}
+
+function HeaderSettings (props) {
+  const inputRef = React.createRef()
+  return (
+    <div className="settings-header">
+      <div className="settings-header-logo">
+        <h3>Logo text</h3>
+        <div className="settings-header-logo-actions">
+          <input type="text" ref={inputRef} placeholder="Change logo text..."/>
+          <button type="button" onClick={() => {
+            localStorage.setItem('logo', inputRef.current.value)
+            props.setLogo(inputRef.current.value)
+          }}>Update Logo</button>
+        </div>
+      </div>
+      <div className="settings-header-links">
+        <h3>Navigation items</h3>
+        <div className="settings-header-links-actions">
           <ul>
             {props.headerLinks.map((item, i) => {
               return (
@@ -81,14 +113,21 @@ function SettingsBox (props) {
           </form>
         </div>
       </div>
+    </div>
+  )
+}
 
-      {/*<div className="admin-panel-content">
-        <button type="button">Background Image</button>
-        <div>
-          <div className="left-block"></div>
-          <div className="right-block"></div>
+function LayoutSettings (props) {
+  return (
+    <div className="settings-layout">
+      <h3>Layout blocks</h3>
+      <div className="settings-layout-actions">
+        <div className="left-block"></div>
+        <div className="right-block">
+          <div></div>
+          <div></div>
         </div>
-      </div>*/}
+      </div>
     </div>
   )
 }
