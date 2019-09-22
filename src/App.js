@@ -1,5 +1,6 @@
 import React, { Component, useState } from 'react'
 import { render } from 'react-dom'
+// import { useDrag } from 'react-dnd'
 import './index.styl'
 
 class App extends Component {
@@ -44,10 +45,11 @@ class App extends Component {
 }
 
 function SettingsBox (props) {
+  const [selectedItem, setSelectedItem] = useState('header')
   return (
     <div className="settings-box">
       <select className="settings-select" onChange={e => {
-        console.log(e.target.value)
+        setSelectedItem(e.target.value)
       }}>
         <option value="header" name="admin-panel">Header</option>
         <option value="layout" name="admin-panel">Layout</option>
@@ -56,12 +58,14 @@ function SettingsBox (props) {
       </select>
 
       <HeaderSettings
+        show={selectedItem == 'header'}
         headerLinks={props.headerLinks}
         setHeaderLinks={props.setHeaderLinks}
         setLogo={props.setLogo}
       />
 
       <LayoutSettings
+        show={selectedItem == 'layout'}
       />
     </div>
   )
@@ -70,7 +74,7 @@ function SettingsBox (props) {
 function HeaderSettings (props) {
   const inputRef = React.createRef()
   return (
-    <div className="settings-header">
+    <div className={props.show ? "settings-header" : 'hidden'}>
       <div className="settings-header-logo">
         <h3>Logo text</h3>
         <div className="settings-header-logo-actions">
@@ -118,8 +122,12 @@ function HeaderSettings (props) {
 }
 
 function LayoutSettings (props) {
+  // const [collectedProps, drag] = useDrag({
+  //   item: {id, type},
+  // })
+  // console.log(collectedProps, drag)
   return (
-    <div className="settings-layout">
+    <div className={props.show ? "settings-layout" : 'hidden'}>
       <h3>Layout blocks</h3>
       <div className="settings-layout-actions">
         <div className="left-block"></div>
