@@ -1,0 +1,31 @@
+7. Web App Projects
+- Introduction: building your resume to get jobs
+- Finding a problem to solve
+- Market research: demand and willingness to pay
+-- Why we don't care about competitors
+-- How to create interest
+- Building a custom tailored solution
+- Deploying the resulting web app
+- Final message: Build a business with your skills
+
+
+Problem: Business owners want to understand how their employees spend their time on the internet because many employees waste precious working time on useless activities.
+
+Solution: A chrome or browser extension that captures all the user activity in the browser all the time and shows that activity to the business owner. To make it efficient, we'll take screenshots every 5 minutes and store them in the database instead of recording all the time.
+
+
+Problem: Traditional businesses such as painting companies are having a hard time finding website builders or web agencies willing to create an excellent website for their niche. Many are too generic, others are too expensive.
+
+Solution: We'll provide a website builder specifically designed for painting companies that need websites. They will be cheap because they are very specialised and they will look great because we'll provide graphics such as icons, stock images, color templates and different design elements that fit perfectly into the painting business.
+
+
+- We need to know if they are interested in taking their business to the next level with a website
+- Do they have one? If not, why? If yes, how does it look like and how can we improve it with our builder?
+
+After 10 or 20 conversations maybe after 2000 connections
+- Implement the ideas from the conversations to the solution and keep them updated via an email list. You'll use mailchimp.
+
+
+Problem: Keeping track of each other's progress when working on a fully-remote company. How do we stay updated in all these fast companies?
+
+Solution: An application that allows you to answer specific questions you may have about a project even if I'm not available.
