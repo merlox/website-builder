@@ -1,5 +1,6 @@
 import React, { Component, useState } from 'react'
 import { render } from 'react-dom'
+import './index.styl'
 
 class App extends Component {
   constructor (props) {
@@ -11,9 +12,9 @@ class App extends Component {
 
   render () {
     return (
-      <div>
-        <div>
-          <div>Logo</div>
+      <div className="main-container">
+        <div className="navigation">
+          <div className="logo">Logo</div>
           <div className="links">
             <ul>
               {this.state.headerLinks.map((item, i) => {
@@ -38,8 +39,8 @@ class App extends Component {
 
 function SettingsBox (props) {
   return (
-    <div>
-      <select name="admin-panel" onChange={e => {
+    <div className="settings-box">
+      <select className="settings-select" onChange={e => {
         console.log(e.target.value)
       }}>
         <option value="header" name="admin-panel">Header</option>
@@ -48,9 +49,9 @@ function SettingsBox (props) {
         <option value="content" name="admin-panel">Content</option>
       </select>
 
-      <div className="admin-panel-header">
-        <div className="logo-modifier"></div>
-        <div className="links-modifier">
+      <div className="settings-header">
+        <button className="settings-header-logo" type="button">Update Logo</button>
+        <div className="settings-header-links">
           <ul>
             {props.headerLinks.map((item, i) => {
               return (
@@ -69,24 +70,25 @@ function SettingsBox (props) {
           <form onSubmit={e => {
             e.preventDefault()
             const newLink = e.target.querySelector('input[name=header-link-input]').value
+            e.target.querySelector('input[name=header-link-input]').value = ''
             const copyHeaderLinks = props.headerLinks.slice(0)
             copyHeaderLinks.push(newLink)
             localStorage.setItem('headerLinks', JSON.stringify(copyHeaderLinks))
             props.setHeaderLinks(copyHeaderLinks)
           }}>
-            <input type="text" name="header-link-input" />
+            <input type="text" name="header-link-input" placeholder="Nav link name..." />
             <button>Add Link</button>
           </form>
         </div>
       </div>
 
-      <div className="admin-panel-content">
+      {/*<div className="admin-panel-content">
         <button type="button">Background Image</button>
         <div>
           <div className="left-block"></div>
           <div className="right-block"></div>
         </div>
-      </div>
+      </div>*/}
     </div>
   )
 }

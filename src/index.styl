@@ -1,0 +1,90 @@
+mainColor = rgb(68, 129, 116)
+secondaryColor = rgb(141, 194, 183)
+
+body
+  margin: 0
+  font-family: sans-serif
+
+.main-container
+  display: grid
+  width: 100vw
+
+.navigation
+  background-color: mainColor
+  color: white
+
+  .logo
+    font-size: 20pt
+    padding-left: 10px
+    padding-top: 10px
+
+  .links
+    width: 100%
+
+    ul
+      list-style-type: none
+      padding-left: 0
+      display: grid
+      grid-auto-flow: column
+      width: 100%
+
+    li
+      justify-self: center
+
+.settings-box
+  width: 300px
+  background-color: secondaryColor
+  padding: 20px
+  justify-self: right
+
+  .settings-select
+    border: 0
+    background-color: white
+    width: 50%
+    border-radius: 0
+    -webkit-appearance: none
+    -moz-appearance: none
+    padding: 10px
+    position: relative
+    cursor: pointer
+    font-size: 12px !important
+
+    &:hover
+      background-color: mainColor
+      color: white
+
+.settings-header
+  background-color: white
+  padding: 20px
+  margin-top: 20px
+  border: 0
+
+  .settings-header-logo
+    border: 1px solid grey
+    background-color: white
+    padding: 10px
+    cursor: pointer
+    font-size: 12px
+
+  .settings-header-links ul
+    list-style-type: none
+    padding-left: 0
+    border: 1px solid grey
+
+    li
+      font-size: 12px
+      padding: 10px
+      position: relative
+      cursor: pointer
+
+      &:hover
+        background-color: mainColor
+        color: white
+
+      &:after
+        content: 'x'
+        position: absolute
+        right: 10px
+        width: 20px
+        height: 20px
+        text-align: center
