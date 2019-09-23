@@ -9,10 +9,19 @@ class App extends Component {
     this.state = {
       headerLinks: localStorage.headerLinks ? JSON.parse(localStorage.headerLinks) : [],
       logo: localStorage.logo ? localStorage.logo : 'Logo',
+      dragStarted: false,
     }
   }
 
+  onDrop (e) {
+    const data = e.dataTransfer.getData('layout')
+  }
+
   render () {
+    let mainContentClass = 'content-container'
+    if (this.state.dragStarted) mainContentClass += ' drag-started'
+    if (this.state.dragginOver) mainContentClass += ' drag-over'
+
     return (
       <div className="main-container">
         <div className="navigation">
@@ -28,7 +37,18 @@ class App extends Component {
           </div>
         </div>
 
-        <div className="content-container">Hi this is the main content :)</div>
+        <div
+          onDragEnter={e => {
+            e.preventDefault()
+            this.setState({dragginOver: true})
+          }}
+          onDragLeave={e => {
+            e.preventDefault()
+            this.setState({dragginOver: false})
+          }}
+          className={mainContentClass}
+          onDrop={e => this.onDrop(e)}
+        >Hi this is the main content :)</div>
 
         <SettingsBox
           headerLinks={this.state.headerLinks}
@@ -38,6 +58,8 @@ class App extends Component {
           setLogo={logo => {
             this.setState({logo})
           }}
+          dragStarted={e => this.setState({dragStarted: true})}
+          dragEnded={e => this.setState({dragStarted: false})}
         />
       </div>
     )
@@ -45,7 +67,7 @@ class App extends Component {
 }
 
 function SettingsBox (props) {
-  const [selectedItem, setSelectedItem] = useState('header')
+  const [selectedItem, setSelectedItem] = useState('layout')
   return (
     <div className="settings-box">
       <select className="settings-select" onChange={e => {
@@ -66,6 +88,8 @@ function SettingsBox (props) {
 
       <LayoutSettings
         show={selectedItem == 'layout'}
+        dragStarted={props.dragStarted}
+        dragEnded={props.dragEnded}
       />
     </div>
   )
@@ -121,23 +145,41 @@ function HeaderSettings (props) {
   )
 }
 
-function LayoutSettings (props) {
-  // const [collectedProps, drag] = useDrag({
-  //   item: {id, type},
-  // })
-  // console.log(collectedProps, drag)
-  return (
-    <div className={props.show ? "settings-layout" : 'hidden'}>
-      <h3>Layout blocks</h3>
-      <div className="settings-layout-actions">
-        <div className="left-block"></div>
-        <div className="right-block">
-          <div></div>
-          <div></div>
+class LayoutSettings extends Component {
+  constructor (props) {
+    super(props)
+  }
+
+  dragStart (e) {
+    e.dataTransfer.setData('layout', e.target.className)
+    e.target.style.opacity = 0.4
+    this.props.dragStarted(e.target.className)
+  }
+
+  dragEnd (e) {
+    e.target.style.opacity = 1
+    this.props.dragEnded(e.target.className)
+  }
+
+  render () {
+    return (
+      <div className={this.props.show ? "settings-layout" : 'hidden'}>
+        <h3>Layout blocks</h3>
+        <div className="settings-layout-actions">
+          <div
+            className="left-block"
+            draggable="true"
+            onDragStart={e => this.dragStart(e)}
+            onDragEnd={e => this.dragEnd(e)}
+          ></div>
+          <div className="right-block">
+            <div></div>
+            <div></div>
+          </div>
         </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 render(<App />, document.querySelector('#root'))
