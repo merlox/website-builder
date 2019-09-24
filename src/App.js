@@ -88,6 +88,7 @@ class App extends Component {
                 key={id}
                 blockId={id}
                 selfDestruct={id => this.destructElement(id)}
+                dragStarted={this.state.dragStarted}
               />
             ))}
           </div>
@@ -250,26 +251,39 @@ class LayoutSettings extends Component {
 function EmptyBlock (props) {
   const [isTitleHidden, setTitleHidden] = useState(false)
   const [isEditingHeading, setIsEditingHeading] = useState(false)
-  const [headingText, setHeadingText] = useState('Text')
+  const [headingText, setHeadingText] = useState('Heading')
   const [showEditHeadingButton, setShowEditHeadingButton] = useState(false)
 
   const [isTextHidden, setTextHidden] = useState(false)
   const [isEditingText, setIsEditingText] = useState(false)
-  const [textContent, setTextContent] = useState('Text')
+  const [textContent, setTextContent] = useState('Paragraph')
   const [showTextEditButton, setShowTextEditButton] = useState(false)
 
   const [isImgHidden, setImgHidden] = useState(false)
   const [uploadedImg, setUploadedImg] = useState(null)
+  const [showDropzone, setShowDropzone] = useState(false)
+  const [nextBlocks, setNextBlocks] = useState(null)
+
+  if (props.dragStarted && !showDropzone) setShowDropzone(true)
+  else if (!props.dragStarted && showDropzone) setShowDropzone(false)
 
   let imgUploadRef = React.createRef()
   let className = 'empty-block-actions'
   if (isTitleHidden || isTextHidden || isImgHidden) className += ' hidden'
   return (
-    <div className="empty-block">
+    <div
+      className="empty-block"
+      onDragOver={e => e.preventDefault()}
+      onDrop={e => {
+        e.preventDefault()
+        setShowDropzone(false)
+        setNextBlocks(<EmptyBlock />)
+      }}
+    >
       <div className="empty-block-inner">
         <button
           type="button"
-          className="delete-button"
+          className={'blockId' in props ? "delete-button" : 'hidden'}
           onClick={e => {
             props.selfDestruct(props.blockId)
           }}
@@ -288,7 +302,7 @@ function EmptyBlock (props) {
               onClick={e => {
                 setIsEditingHeading(false)
               }}
-            >Edit</button>
+            >Save</button>
           </form>
           <h3
             className={!isEditingHeading ? '' : 'hidden'}
@@ -381,7 +395,9 @@ function EmptyBlock (props) {
         </div>
       </div>
 
-      <div className="dropzone">Drop here</div>
+      <div className={showDropzone ? "dropzone": 'hidden'}>Drop here</div>
+
+      <div className={nextBlocks ? "next-blocks" : 'hidden'}>{nextBlocks}</div>
     </div>
   )
 }
