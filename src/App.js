@@ -29,16 +29,28 @@ class App extends Component {
     this.setState({dragginOver: false})
     const data = e.dataTransfer.getData('layout')
     let ids = this.state.blockIds
+    let mainContentBlocksCopy = this.state.mainContentBlocks.splice(0)
+
     switch (data) {
       case 'left-block':
+        if (mainContentBlocksCopy.length == 0) {
+          mainContentBlocksCopy = [[ids]]
+        } else {
+          mainContentBlocksCopy.push([ids])
+        }
         this.setState({
-          mainContentBlocks: [ids],
+          mainContentBlocks: mainContentBlocksCopy,
           blockIds: ids + 1,
         })
         break
       case 'right-block':
+        if (mainContentBlocksCopy.length == 0) {
+          mainContentBlocksCopy = [[ids, ids + 1]]
+        } else {
+          mainContentBlocksCopy.push([ids, ids + 1])
+        }
         this.setState({
-          mainContentBlocks: [ids, ids + 1],
+          mainContentBlocks: mainContentBlocksCopy,
           blockIds: ids + 2,
         })
         break
@@ -65,6 +77,18 @@ class App extends Component {
           </div>
         </div>
 
+        {this.state.mainContentBlocks.map(area => (
+          <div className="empty-blocks-container" key={area}>
+            {area.map(id => (
+              <EmptyBlock
+                key={id}
+                blockId={id}
+                selfDestruct={id => this.destructElement(id)}
+              />
+            ))}
+          </div>
+        ))}
+
         <div
           onDragEnter={e => {
             e.preventDefault()
@@ -80,17 +104,7 @@ class App extends Component {
             e.preventDefault()
             this.onDrop(e)
           }}
-        >
-          <div className="empty-blocks-container">
-            {this.state.mainContentBlocks.map(id => (
-              <EmptyBlock
-                key={id}
-                blockId={id}
-                selfDestruct={id => this.destructElement(id)}
-              />
-            ))}
-          </div>
-        </div>
+        ></div>
 
         <SettingsBox
           headerLinks={this.state.headerLinks}
@@ -248,118 +262,122 @@ function EmptyBlock (props) {
   if (isTitleHidden || isTextHidden || isImgHidden) className += ' hidden'
   return (
     <div className="empty-block">
-      <button
-        type="button"
-        className="delete-button"
-        onClick={e => {
-          props.selfDestruct(props.blockId)
-        }}
-      >Delete</button>
+      <div className="empty-block-inner">
+        <button
+          type="button"
+          className="delete-button"
+          onClick={e => {
+            props.selfDestruct(props.blockId)
+          }}
+        >Delete</button>
 
-      <div className={isTitleHidden ? '' : 'hidden'}>
-        <form className={isEditingHeading ? '' : 'hidden'} onSubmit={e => {
-          e.preventDefault()
-          setIsEditingHeading(false)
-        }}>
-          <input type="text" onChange={e => {
-            setHeadingText(e.target.value)
-          }} placeholder="Title text..." defaultValue={headingText}/>
-          <button
-            type="button"
-            onClick={e => {
-              setIsEditingHeading(false)
+        <div className={isTitleHidden ? '' : 'hidden'}>
+          <form className={isEditingHeading ? '' : 'hidden'} onSubmit={e => {
+            e.preventDefault()
+            setIsEditingHeading(false)
+          }}>
+            <input type="text" onChange={e => {
+              setHeadingText(e.target.value)
+            }} placeholder="Title text..." defaultValue={headingText}/>
+            <button
+              type="button"
+              onClick={e => {
+                setIsEditingHeading(false)
+              }}
+            >Edit</button>
+          </form>
+          <h3
+            className={!isEditingHeading ? '' : 'hidden'}
+            onMouseEnter={e => {
+              setShowEditHeadingButton(true)
             }}
-          >Edit</button>
-        </form>
-        <h3
-          className={!isEditingHeading ? '' : 'hidden'}
-          onMouseEnter={e => {
-            setShowEditHeadingButton(true)
-          }}
-          onMouseLeave={e => {
-            setShowEditHeadingButton(false)
-          }}
-        >
-          {headingText} &nbsp;
-          <button
-            className={showEditHeadingButton ? '' : 'hidden'}
-            type="button"
-            onClick={e => {
-              setIsEditingHeading(true)
+            onMouseLeave={e => {
+              setShowEditHeadingButton(false)
             }}
-          >Edit</button>
-        </h3>
+          >
+            {headingText} &nbsp;
+            <button
+              className={showEditHeadingButton ? '' : 'hidden'}
+              type="button"
+              onClick={e => {
+                setIsEditingHeading(true)
+              }}
+            >Edit</button>
+          </h3>
+        </div>
+
+        <div className={isTextHidden ? '' : 'hidden'}>
+          <form className={isEditingText ? '' : 'hidden'} onSubmit={e => {
+            e.preventDefault()
+            setIsEditingText(false)
+          }}>
+            <input type="text" onChange={e => {
+              setTextContent(e.target.value)
+            }} placeholder="Title text..." defaultValue={textContent}/>
+            <button
+              type="button"
+              onClick={e => {
+                setIsEditingText(false)
+              }}
+            >Save</button>
+          </form>
+          <p
+            className={!isEditingText ? '' : 'hidden'}
+            onMouseEnter={e => {
+              setShowTextEditButton(true)
+            }}
+            onMouseLeave={e => {
+              setShowTextEditButton(false)
+            }}
+          >
+            {textContent} &nbsp;
+            <button
+              className={showTextEditButton ? '' : 'hidden'}
+              type="button"
+              onClick={e => {
+                setIsEditingText(true)
+              }}
+            >Edit</button>
+          </p>
+        </div>
+
+        <div className={isImgHidden ? 'image-container' : 'hidden'}>
+          <input
+            ref={imgUploadRef}
+            type="file"
+            className={uploadedImg ? 'hidden' : ''}
+            onChange={e => {
+              if (e.target.files && e.target.files[0]) {
+                let img = document.createElement('img')
+                img.src = URL.createObjectURL(e.target.files[0])
+                img.addEventListener('load', () => {
+                  setUploadedImg(img.src)
+                })
+              }
+            }}
+          />
+          <img
+            src={uploadedImg}
+            alt="Uploaded img"
+            className={uploadedImg ? 'uploaded-image' : 'hidden'}
+          />
+        </div>
+
+        <div className={className}>
+          <button type="button" onClick={e => {
+            setTitleHidden(true)
+          }}>Add Heading</button>
+          <button type="button" onClick={e => {
+            setTextHidden(true)
+          }}>Add Text</button>
+          <button type="button" onClick={e => {
+            setImgHidden(true)
+            imgUploadRef.current.click()
+          }}>Add Image</button>
+        </div>
       </div>
 
-      <div className={isTextHidden ? '' : 'hidden'}>
-        <form className={isEditingText ? '' : 'hidden'} onSubmit={e => {
-          e.preventDefault()
-          setIsEditingText(false)
-        }}>
-          <input type="text" onChange={e => {
-            setTextContent(e.target.value)
-          }} placeholder="Title text..." defaultValue={textContent}/>
-          <button
-            type="button"
-            onClick={e => {
-              setIsEditingText(false)
-            }}
-          >Save</button>
-        </form>
-        <p
-          className={!isEditingText ? '' : 'hidden'}
-          onMouseEnter={e => {
-            setShowTextEditButton(true)
-          }}
-          onMouseLeave={e => {
-            setShowTextEditButton(false)
-          }}
-        >
-          {textContent} &nbsp;
-          <button
-            className={showTextEditButton ? '' : 'hidden'}
-            type="button"
-            onClick={e => {
-              setIsEditingText(true)
-            }}
-          >Edit</button>
-        </p>
-      </div>
-
-      <div className={isImgHidden ? 'image-container' : 'hidden'}>
-        <input
-          ref={imgUploadRef}
-          type="file"
-          className={uploadedImg ? 'hidden' : ''}
-          onChange={e => {
-            if (e.target.files && e.target.files[0]) {
-              let img = document.createElement('img')
-              img.src = URL.createObjectURL(e.target.files[0])
-              img.addEventListener('load', () => {
-                setUploadedImg(img.src)
-              })
-            }
-          }}
-        />
-        <img
-          src={uploadedImg}
-          alt="Uploaded img"
-          className={uploadedImg ? 'uploaded-image' : 'hidden'}
-        />
-      </div>
-
-      <div className={className}>
-        <button type="button" onClick={e => {
-          setTitleHidden(true)
-        }}>Add Heading</button>
-        <button type="button" onClick={e => {
-          setTextHidden(true)
-        }}>Add Text</button>
-        <button type="button" onClick={e => {
-          setImgHidden(true)
-          imgUploadRef.current.click()
-        }}>Add Image</button>
-      </div>
+      <div className="dropzone">Drop here</div>
     </div>
   )
 }

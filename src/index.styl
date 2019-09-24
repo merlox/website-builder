@@ -190,46 +190,68 @@ h3
   display: flex
   justify-content: space-around
   height: 100%
+  margin-top: 5px
 
   .empty-block
     width: 100%
-    margin: auto
     border: 2px solid #d3d3d3
-    display: flex
-    justify-content: center
+    display: grid
+    justify-items: center
     align-items: center
-    height: 100%
     position: relative
+    height: 400px
 
     &:not(:last-child)
       margin-right: 5px
 
-    .image-container
-      height: 100%
-      display: flex
+    .dropzone
+      display: none
+      border: 5px dashed lightgrey
+      height: 150px
+      width: 300px
+      margin: auto
+      color: grey
       justify-content: center
       align-items: center
 
-      .uploaded-image
+    .empty-block-inner
+      width: 100%
+      margin: auto
+      display: grid
+      justify-items: center
+      align-items: center
+      height: 100%
+      position: relative
+
+      .image-container
+        display: flex
+        justify-content: center
+        align-items: center
         height: 100%
 
-    .delete-button
-      color: lightgrey
-      position: absolute
-      right: 10px
-      top: 10px
+        .uploaded-image
+          width: auto
+          height: auto
+          max-width: 100%
+          max-height: 100%
 
-    button
-      border: 2px solid lightgrey
-      background-color: white
-      cursor: pointer
+      .delete-button
+        color: lightgrey
+        position: absolute
+        right: 10px
+        top: 10px
 
-      &:not(:last-child)
-        margin-right: 5px
+      button
+        border: 2px solid lightgrey
+        background-color: white
+        cursor: pointer
 
-      &:hover
-        background-color: lightgrey
+        &:not(:last-child)
+          margin-right: 5px
 
-      &:active
-        background-color: rgb(148, 148, 148)
-        border: 2px solid rgb(148, 148, 148)
+        &:hover
+          background-color: lightgrey
+
+        &:active
+          background-color: rgb(148, 148, 148)
+          border: 2px solid rgb(148, 148, 148)
