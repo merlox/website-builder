@@ -1,6 +1,5 @@
 import React, { Component, useState } from 'react'
 import { render } from 'react-dom'
-// import { useDrag } from 'react-dnd'
 import './index.styl'
 
 class App extends Component {
