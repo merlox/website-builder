@@ -11,10 +11,20 @@ class App extends Component {
       logo: localStorage.logo ? localStorage.logo : 'Logo',
       dragStarted: false,
     }
+    this.mainContentRef = React.createRef()
   }
 
   onDrop (e) {
+    this.setState({dragginOver: false})
     const data = e.dataTransfer.getData('layout')
+    switch (data) {
+      case 'left-block':
+        this.mainContentRef.current.innerHTML = `<h1>${data}</h1>`
+        break
+      case 'right-block':
+        this.mainContentRef.current.innerHTML = `<h1>${data}</h1>`
+        break
+    }
   }
 
   render () {
@@ -38,6 +48,7 @@ class App extends Component {
         </div>
 
         <div
+          ref={this.mainContentRef}
           onDragEnter={e => {
             e.preventDefault()
             this.setState({dragginOver: true})
@@ -46,9 +57,14 @@ class App extends Component {
             e.preventDefault()
             this.setState({dragginOver: false})
           }}
+          onDragOver={e => e.preventDefault()}
           className={mainContentClass}
-          onDrop={e => this.onDrop(e)}
-        >Hi this is the main content :)</div>
+          onDrop={e => {
+            console.log('called')
+            e.preventDefault()
+            this.onDrop(e)
+          }}
+        >fasdfas</div>
 
         <SettingsBox
           headerLinks={this.state.headerLinks}
@@ -172,7 +188,12 @@ class LayoutSettings extends Component {
             onDragStart={e => this.dragStart(e)}
             onDragEnd={e => this.dragEnd(e)}
           ></div>
-          <div className="right-block">
+          <div
+            className="right-block"
+            draggable="true"
+            onDragStart={e => this.dragStart(e)}
+            onDragEnd={e => this.dragEnd(e)}
+          >
             <div></div>
             <div></div>
           </div>
