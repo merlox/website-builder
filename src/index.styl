@@ -22,7 +22,6 @@ h3
     &.drag-started
       border: 5px dotted grey
       border-radius: 20px
-      margin: 10px
 
     &.drag-over
       border: 5px dashed grey
@@ -186,3 +185,39 @@ h3
               border: 3px solid grey
               box-sizing: border-box
               display: inline-block
+
+.empty-blocks-container
+  display: flex
+  justify-content: space-around
+  height: 100%
+
+  .empty-block
+    width: 100%
+    margin: auto
+    border: 2px solid #d3d3d3
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 100%
+
+    &:not(:last-child)
+      margin-right: 5px
+
+    .editing-title:hover
+      border: 2px solid grey
+      padding: 10px
+
+    button
+      border: 2px solid lightgrey
+      background-color: white
+      cursor: pointer
+
+      &:not(:last-child)
+        margin-right: 5px
+
+      &:hover
+        background-color: lightgrey
+
+      &:active
+        background-color: rgb(148, 148, 148)
+        border: 2px solid rgb(148, 148, 148)

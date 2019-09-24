@@ -10,8 +10,8 @@ class App extends Component {
       headerLinks: localStorage.headerLinks ? JSON.parse(localStorage.headerLinks) : [],
       logo: localStorage.logo ? localStorage.logo : 'Logo',
       dragStarted: false,
+      mainContentBlocks: null,
     }
-    this.mainContentRef = React.createRef()
   }
 
   onDrop (e) {
@@ -19,10 +19,17 @@ class App extends Component {
     const data = e.dataTransfer.getData('layout')
     switch (data) {
       case 'left-block':
-        this.mainContentRef.current.innerHTML = `<h1>${data}</h1>`
+        this.setState({mainContentBlocks: <div className="empty-blocks-container">
+            <EmptyBlock />
+          </div>
+        })
         break
       case 'right-block':
-        this.mainContentRef.current.innerHTML = `<h1>${data}</h1>`
+        this.setState({mainContentBlocks: <div className="empty-blocks-container">
+            <EmptyBlock />
+            <EmptyBlock />
+          </div>
+        })
         break
     }
   }
@@ -48,7 +55,6 @@ class App extends Component {
         </div>
 
         <div
-          ref={this.mainContentRef}
           onDragEnter={e => {
             e.preventDefault()
             this.setState({dragginOver: true})
@@ -60,11 +66,10 @@ class App extends Component {
           onDragOver={e => e.preventDefault()}
           className={mainContentClass}
           onDrop={e => {
-            console.log('called')
             e.preventDefault()
             this.onDrop(e)
           }}
-        >fasdfas</div>
+        >{this.state.mainContentBlocks}</div>
 
         <SettingsBox
           headerLinks={this.state.headerLinks}
@@ -89,8 +94,8 @@ function SettingsBox (props) {
       <select className="settings-select" onChange={e => {
         setSelectedItem(e.target.value)
       }}>
-        <option value="header" name="admin-panel">Header</option>
         <option value="layout" name="admin-panel">Layout</option>
+        <option value="header" name="admin-panel">Header</option>
         <option value="footer" name="admin-panel">Footer</option>
         <option value="content" name="admin-panel">Content</option>
       </select>
@@ -201,6 +206,48 @@ class LayoutSettings extends Component {
       </div>
     )
   }
+}
+
+function EmptyBlock (props) {
+  const [isHidden, setIsHidden] = useState(false)
+  const [isEditingHeading, setIsEditingHeading] = useState(false)
+  const [headingText, setHeadingText] = useState('Hover to change the title')
+  const [showEditButton, setShowEditButton] = useState(false)
+
+  let className = 'empty-block-actions'
+  if (isHidden) className += ' hidden'
+  return (
+    <div className="empty-block">
+      <div>
+        <form className={isEditingHeading ? '' : 'hidden'} onSubmit={e => {
+          e.preventDefault()
+          setIsEditingHeading(false)
+        }}>
+          <input type="text" onChange={e => {
+            setHeadingText(e.target.value)
+          }} placeholder="Title text..." defaultValue={headingText }/>
+        </form>
+        <h3
+          className={isHidden && !isEditingHeading ? 'editing-title' : 'hidden'}
+          onMouseEnter={e => {
+            setShowEditButton(true)
+          }}
+          onMouseLeave={e => {
+            setShowEditButton(false)
+          }}
+        >{headingText}<button className={showEditButton ? '' : 'hidden'} type="button" onClick={e => {
+          setIsEditingHeading(true)
+        }}>Edit</button></h3>
+      </div>
+      <div className={className}>
+        <button type="button" onClick={e => {
+          setIsHidden(true)
+        }}>Add Heading</button>
+        <button type="button">Add Text</button>
+        <button type="button">Add Image</button>
+      </div>
+    </div>
+  )
 }
 
 render(<App />, document.querySelector('#root'))
