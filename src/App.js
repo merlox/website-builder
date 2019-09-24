@@ -16,8 +16,12 @@ class App extends Component {
 
   destructElement (id) {
     let mainContentBlocksCopy = this.state.mainContentBlocks.splice(0)
-    let filtered = mainContentBlocksCopy.filter(item => {
-      return item != id
+    let filtered = mainContentBlocksCopy.map(array => {
+      return array.filter(item => {
+        return item != id
+      })
+    }).filter(array => {
+      return array.length > 0
     })
 
     this.setState({
