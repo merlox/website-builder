@@ -199,12 +199,25 @@ h3
     justify-content: center
     align-items: center
     height: 100%
+    position: relative
 
     &:not(:last-child)
       margin-right: 5px
 
-    .uploaded-image
-      width: 200px
+    .image-container
+      height: 100%
+      display: flex
+      justify-content: center
+      align-items: center
+
+      .uploaded-image
+        height: 100%
+
+    .delete-button
+      color: lightgrey
+      position: absolute
+      right: 10px
+      top: 10px
 
     button
       border: 2px solid lightgrey

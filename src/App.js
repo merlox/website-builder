@@ -10,25 +10,37 @@ class App extends Component {
       headerLinks: localStorage.headerLinks ? JSON.parse(localStorage.headerLinks) : [],
       logo: localStorage.logo ? localStorage.logo : 'Logo',
       dragStarted: false,
-      mainContentBlocks: null,
+      blockIds: 0,
+      mainContentBlocks: [],
     }
+  }
+
+  destructElement (id) {
+    let mainContentBlocksCopy = this.state.mainContentBlocks.splice(0)
+    let filtered = mainContentBlocksCopy.filter(item => {
+      return item != id
+    })
+
+    this.setState({
+      mainContentBlocks: filtered
+    })
   }
 
   onDrop (e) {
     this.setState({dragginOver: false})
     const data = e.dataTransfer.getData('layout')
+    let ids = this.state.blockIds
     switch (data) {
       case 'left-block':
-        this.setState({mainContentBlocks: <div className="empty-blocks-container">
-            <EmptyBlock />
-          </div>
+        this.setState({
+          mainContentBlocks: [ids],
+          blockIds: ids + 1,
         })
         break
       case 'right-block':
-        this.setState({mainContentBlocks: <div className="empty-blocks-container">
-            <EmptyBlock />
-            <EmptyBlock />
-          </div>
+        this.setState({
+          mainContentBlocks: [ids, ids + 1],
+          blockIds: ids + 2,
         })
         break
     }
@@ -69,7 +81,17 @@ class App extends Component {
             e.preventDefault()
             this.onDrop(e)
           }}
-        >{this.state.mainContentBlocks}</div>
+        >
+          <div className="empty-blocks-container">
+            {this.state.mainContentBlocks.map(id => (
+              <EmptyBlock
+                key={id}
+                blockId={id}
+                selfDestruct={id => this.destructElement(id)}
+              />
+            ))}
+          </div>
+        </div>
 
         <SettingsBox
           headerLinks={this.state.headerLinks}
@@ -222,10 +244,19 @@ function EmptyBlock (props) {
   const [isImgHidden, setImgHidden] = useState(false)
   const [uploadedImg, setUploadedImg] = useState(null)
 
+  let imgUploadRef = React.createRef()
   let className = 'empty-block-actions'
   if (isTitleHidden || isTextHidden || isImgHidden) className += ' hidden'
   return (
     <div className="empty-block">
+      <button
+        type="button"
+        className="delete-button"
+        onClick={e => {
+          props.selfDestruct(props.blockId)
+        }}
+      >Delete</button>
+
       <div className={isTitleHidden ? '' : 'hidden'}>
         <form className={isEditingHeading ? '' : 'hidden'} onSubmit={e => {
           e.preventDefault()
@@ -274,7 +305,7 @@ function EmptyBlock (props) {
             onClick={e => {
               setIsEditingText(false)
             }}
-          >Edit</button>
+          >Save</button>
         </form>
         <p
           className={!isEditingText ? '' : 'hidden'}
@@ -296,8 +327,9 @@ function EmptyBlock (props) {
         </p>
       </div>
 
-      <div className={isImgHidden ? '' : 'hidden'}>
+      <div className={isImgHidden ? 'image-container' : 'hidden'}>
         <input
+          ref={imgUploadRef}
           type="file"
           className={uploadedImg ? 'hidden' : ''}
           onChange={e => {
@@ -326,6 +358,7 @@ function EmptyBlock (props) {
         }}>Add Text</button>
         <button type="button" onClick={e => {
           setImgHidden(true)
+          imgUploadRef.current.click()
         }}>Add Image</button>
       </div>
     </div>
