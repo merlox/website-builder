@@ -209,42 +209,124 @@ class LayoutSettings extends Component {
 }
 
 function EmptyBlock (props) {
-  const [isHidden, setIsHidden] = useState(false)
+  const [isTitleHidden, setTitleHidden] = useState(false)
   const [isEditingHeading, setIsEditingHeading] = useState(false)
-  const [headingText, setHeadingText] = useState('Hover to change the title')
-  const [showEditButton, setShowEditButton] = useState(false)
+  const [headingText, setHeadingText] = useState('Text')
+  const [showEditHeadingButton, setShowEditHeadingButton] = useState(false)
+
+  const [isTextHidden, setTextHidden] = useState(false)
+  const [isEditingText, setIsEditingText] = useState(false)
+  const [textContent, setTextContent] = useState('Text')
+  const [showTextEditButton, setShowTextEditButton] = useState(false)
+
+  const [isImgHidden, setImgHidden] = useState(false)
+  const [uploadedImg, setUploadedImg] = useState(null)
 
   let className = 'empty-block-actions'
-  if (isHidden) className += ' hidden'
+  if (isTitleHidden || isTextHidden || isImgHidden) className += ' hidden'
   return (
     <div className="empty-block">
-      <div>
+      <div className={isTitleHidden ? '' : 'hidden'}>
         <form className={isEditingHeading ? '' : 'hidden'} onSubmit={e => {
           e.preventDefault()
           setIsEditingHeading(false)
         }}>
           <input type="text" onChange={e => {
             setHeadingText(e.target.value)
-          }} placeholder="Title text..." defaultValue={headingText }/>
+          }} placeholder="Title text..." defaultValue={headingText}/>
+          <button
+            type="button"
+            onClick={e => {
+              setIsEditingHeading(false)
+            }}
+          >Edit</button>
         </form>
         <h3
-          className={isHidden && !isEditingHeading ? 'editing-title' : 'hidden'}
+          className={!isEditingHeading ? '' : 'hidden'}
           onMouseEnter={e => {
-            setShowEditButton(true)
+            setShowEditHeadingButton(true)
           }}
           onMouseLeave={e => {
-            setShowEditButton(false)
+            setShowEditHeadingButton(false)
           }}
-        >{headingText}<button className={showEditButton ? '' : 'hidden'} type="button" onClick={e => {
-          setIsEditingHeading(true)
-        }}>Edit</button></h3>
+        >
+          {headingText} &nbsp;
+          <button
+            className={showEditHeadingButton ? '' : 'hidden'}
+            type="button"
+            onClick={e => {
+              setIsEditingHeading(true)
+            }}
+          >Edit</button>
+        </h3>
       </div>
+
+      <div className={isTextHidden ? '' : 'hidden'}>
+        <form className={isEditingText ? '' : 'hidden'} onSubmit={e => {
+          e.preventDefault()
+          setIsEditingText(false)
+        }}>
+          <input type="text" onChange={e => {
+            setTextContent(e.target.value)
+          }} placeholder="Title text..." defaultValue={textContent}/>
+          <button
+            type="button"
+            onClick={e => {
+              setIsEditingText(false)
+            }}
+          >Edit</button>
+        </form>
+        <p
+          className={!isEditingText ? '' : 'hidden'}
+          onMouseEnter={e => {
+            setShowTextEditButton(true)
+          }}
+          onMouseLeave={e => {
+            setShowTextEditButton(false)
+          }}
+        >
+          {textContent} &nbsp;
+          <button
+            className={showTextEditButton ? '' : 'hidden'}
+            type="button"
+            onClick={e => {
+              setIsEditingText(true)
+            }}
+          >Edit</button>
+        </p>
+      </div>
+
+      <div className={isImgHidden ? '' : 'hidden'}>
+        <input
+          type="file"
+          className={uploadedImg ? 'hidden' : ''}
+          onChange={e => {
+            if (e.target.files && e.target.files[0]) {
+              let img = document.createElement('img')
+              img.src = URL.createObjectURL(e.target.files[0])
+              img.addEventListener('load', () => {
+                setUploadedImg(img.src)
+              })
+            }
+          }}
+        />
+        <img
+          src={uploadedImg}
+          alt="Uploaded img"
+          className={uploadedImg ? 'uploaded-image' : 'hidden'}
+        />
+      </div>
+
       <div className={className}>
         <button type="button" onClick={e => {
-          setIsHidden(true)
+          setTitleHidden(true)
         }}>Add Heading</button>
-        <button type="button">Add Text</button>
-        <button type="button">Add Image</button>
+        <button type="button" onClick={e => {
+          setTextHidden(true)
+        }}>Add Text</button>
+        <button type="button" onClick={e => {
+          setImgHidden(true)
+        }}>Add Image</button>
       </div>
     </div>
   )
